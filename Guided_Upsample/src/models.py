@@ -69,8 +69,10 @@ class InpaintingModel(BaseModel):
             discriminator = Discriminator2(in_channels=3, use_sigmoid=config.GAN_LOSS != 'hinge')
 
         if len(config.GPU) > 1:
-            generator = nn.DataParallel(generator, config.GPU)
-            discriminator = nn.DataParallel(discriminator , config.GPU)
+            # generator = nn.DataParallel(generator, config.GPU)
+            # discriminator = nn.DataParallel(discriminator , config.GPU)
+            generator = nn.DataParallel(generator, device_ids=[0])   #zk修改  适用于imagenet
+            discriminator = nn.DataParallel(discriminator , device_ids=[0])
 
         l1_loss = nn.L1Loss()
         perceptual_loss = PerceptualLoss()
